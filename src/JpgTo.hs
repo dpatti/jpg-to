@@ -1,11 +1,15 @@
 {-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
 
+module JpgTo
+(
+  config
+, findBest
+) where
+
 import           BasePrelude
 import           Control.Lens
 import           Data.Aeson.Lens
-import qualified Data.Configurator as Conf
-import           Data.Configurator.Types (Configured, Name)
-import           Data.Text (Text, pack, unpack)
+import           Data.Text (Text)
 import qualified Network.Wreq as Wreq
 import           System.Random
 
@@ -24,7 +28,10 @@ imgApiQuery s = (Wreq.param "key" .~ [apiKey s])
               . (Wreq.param "safe" .~ ["high"])
               . (Wreq.param "imgSize" .~ ["large"])
 
-findBest :: Gapi -> Text -> IO Text
+config :: Text -> Text -> Gapi
+config = Gapi
+
+findBest :: Gapi -> Text -> IO (Maybe Text)
 findBest gapi query = do
   let opts = Wreq.defaults
            & imgApiQuery gapi
@@ -32,24 +39,10 @@ findBest gapi query = do
   r <- Wreq.getWith opts imgApiRoot
   let items = toList . (r ^.) $ Wreq.responseBody . key "items" . _Array
   rand <- randomIO :: IO Int
-  let pick = items !! (rand `mod` length items)
-
-  return . (pick ^.) $ key "link" . _String
-
-conf :: Configured a => Name -> IO a
-conf name = do
-  config <- Conf.load [Conf.Required "conf"]
-  Conf.require config name
-
-main :: IO ()
-main = do
-  gapi <- Gapi <$> conf "key" <*> conf "cx"
-
-  args <- getArgs
-  case args of
-    [] -> do
-      putStrLn "Usage: jpg-cli <query>"
-      exitWith $ ExitFailure 1
-    query:_ -> do
-      url <- findBest gapi (pack query)
-      putStrLn . unpack $ url
+  let len = length items
+  if len > 0
+    then do
+      let pick = items !! (rand `mod` len)
+      return . return . (pick ^.) $ key "link" . _String
+    else
+      return Nothing
