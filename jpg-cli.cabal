@@ -1,0 +1,23 @@
+name:                jpg-cli
+version:             0.1.0.0
+description:         Get a jpg url from a string
+license:             MIT
+license-file:        LICENSE
+author:              Doug Patti
+maintainer:          douglas.patti@gmail.com
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable jpg-cli
+  main-is:           Main.hs
+  default-language:  Haskell2010
+  build-depends:     base >=4.6 && <4.7
+                   , aeson == 0.8.*
+                   , base-prelude == 0.1.*
+                   , bytestring == 0.10.*
+                   , configurator
+                   , lens == 4.*
+                   , lens-aeson == 1.0.0.3
+                   , random >= 1.0.1.1
+                   , text >= 0.11.3.1
+                   , wreq >= 0.1.0.1
