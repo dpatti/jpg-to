@@ -11,7 +11,7 @@ Errors are not handled. I don't know how to write Haskell.
 ## Setup
 
 ```
-$ cp conf.sample conf
+$ cp jpg-cli/conf.sample conf
 $ cabal sandbox init
 $ cabal install -j
 $ cabal build
