@@ -30,11 +30,11 @@ findBest gapi query = do
            & imgApiQuery gapi
            & (Wreq.param "q" .~ [query])
   r <- Wreq.getWith opts imgApiRoot
-  let items = toList . fromJust . (r ^?) $ Wreq.responseBody . key "items" . _Array
+  let items = toList . (r ^.) $ Wreq.responseBody . key "items" . _Array
   rand <- randomIO :: IO Int
   let pick = items !! (rand `mod` length items)
 
-  return . fromJust . (pick ^?) $ key "link" . _String
+  return . (pick ^.) $ key "link" . _String
 
 conf :: Configured a => Name -> IO a
 conf name = do
