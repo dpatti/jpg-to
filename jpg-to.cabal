@@ -8,6 +8,10 @@ maintainer:          douglas.patti@gmail.com
 build-type:          Simple
 cabal-version:       >=1.10
 
+source-repository head
+  type: git
+  location: git://github.com/dpatti/jpg-to.git
+
 library
   hs-source-dirs:    src
   exposed-modules:   JpgTo
