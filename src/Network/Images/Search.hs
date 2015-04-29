@@ -1,4 +1,4 @@
-module JpgTo
+module Network.Images.Search
 ( config
 , linksOfQuery
 , luckyLinkOfQuery
