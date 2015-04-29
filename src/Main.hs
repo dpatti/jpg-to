@@ -1,10 +1,12 @@
 {-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
 
+module Main where
+
 import           BasePrelude
 import qualified Data.Configurator as Conf
 import           Data.Configurator.Types (Configured, Name)
 import           Data.Text (pack, unpack)
-import qualified JpgTo
+import qualified Network.Images.Search as Search
 
 conf :: Configured a => Name -> IO a
 conf name = do
@@ -13,7 +15,7 @@ conf name = do
 
 main :: IO ()
 main = do
-  gapi <- JpgTo.config <$> conf "key" <*> conf "cx"
+  gapi <- Search.config <$> conf "key" <*> conf "cx"
 
   args <- getArgs
   case args of
@@ -21,5 +23,5 @@ main = do
       putStrLn "Usage: jpg-cli <query>"
       exitWith $ ExitFailure 1
     query:_ -> do
-      url <- JpgTo.findBest gapi (pack query)
+      url <- Search.luckyLinkOfQuery gapi (pack query)
       putStrLn . unpack . fromJust $ url
