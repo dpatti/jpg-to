@@ -21,5 +21,5 @@ main = do
       putStrLn "Usage: jpg-cli <query>"
       exitWith $ ExitFailure 1
     query:_ -> do
-      url <- JpgTo.findBest gapi (pack query)
+      url <- JpgTo.luckyLinkOfQuery gapi (pack query)
       putStrLn . unpack . fromJust $ url
