@@ -36,3 +36,4 @@ Put your public API access key and custom search engine id in `conf`.
 6. Change "Search only included sites" to "Search the entire web but emphasize
    included sites"
 7. Click "Search engine ID"
+8. Turn on "Image search"
