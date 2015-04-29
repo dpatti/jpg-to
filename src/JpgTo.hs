@@ -1,12 +1,10 @@
-{-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
-
 module JpgTo
 (
   config
 , findBest
 ) where
 
-import           BasePrelude
+import           BasePrelude hiding ((&))
 import           Control.Lens
 import           Data.Aeson.Lens
 import           Data.Text (Text)
