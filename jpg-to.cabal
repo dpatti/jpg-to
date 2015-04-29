@@ -16,20 +16,27 @@ library
   hs-source-dirs:    src
   exposed-modules:   JpgTo
   default-language:  Haskell2010
-  build-depends:     base >=4.6 && <4.7
-                   , aeson == 0.8.*
-                   , base-prelude == 0.1.*
-                   , lens == 4.*
-                   , lens-aeson == 1.0.0.3
-                   , random >= 1.0.1.1
-                   , text >= 0.11.3.1
-                   , wreq >= 0.1.0.1
+  default-extensions: OverloadedStrings
+                    , NoImplicitPrelude
+  build-depends:     aeson
+                   , base
+                   , base-prelude
+                   , bytestring
+                   , lens
+                   , lens-aeson
+                   , random-fu
+                   , random-extras
+                   , random-source
+                   , text
+                   , wreq
 
 executable jpg-cli
   main-is:           jpg-cli/Main.hs
   default-language:  Haskell2010
-  build-depends:     base >=4.6 && <4.7
-                   , base-prelude == 0.1.*
+  default-extensions: NoImplicitPrelude
+                    , OverloadedStrings
+  build-depends:     base
+                   , base-prelude
                    , configurator
                    , jpg-to
-                   , text >= 0.11.3.1
+                   , text

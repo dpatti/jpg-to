@@ -1,17 +1,18 @@
-{-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
-
 module JpgTo
-(
-  config
-, findBest
+( config
+, linksOfQuery
+, luckyLinkOfQuery
 ) where
 
-import           BasePrelude
-import           Control.Lens
-import           Data.Aeson.Lens
+import           Data.Random.Extras (safeChoice)
+import           Data.Random.RVar (runRVar)
+import           Data.Random.Source.DevRandom (DevRandom(..))
 import           Data.Text (Text)
 import qualified Network.Wreq as Wreq
-import           System.Random
+
+import           BasePrelude hiding ((&))
+import           Control.Lens
+import           Data.Aeson.Lens
 
 data Gapi = Gapi { apiKey :: Text, cx :: Text }
 
@@ -31,18 +32,22 @@ imgApiQuery s = (Wreq.param "key" .~ [apiKey s])
 config :: Text -> Text -> Gapi
 config = Gapi
 
-findBest :: Gapi -> Text -> IO (Maybe Text)
-findBest gapi query = do
+linksOfQuery :: Gapi -> Text -> IO [Text]
+linksOfQuery gapi query = do
   let opts = Wreq.defaults
            & imgApiQuery gapi
            & (Wreq.param "q" .~ [query])
   r <- Wreq.getWith opts imgApiRoot
-  let items = toList . (r ^.) $ Wreq.responseBody . key "items" . _Array
-  rand <- randomIO :: IO Int
-  let len = length items
-  if len > 0
-    then do
-      let pick = items !! (rand `mod` len)
-      return . return . (pick ^.) $ key "link" . _String
-    else
-      return Nothing
+  return (r ^.. links)
+  where
+    links =
+      Wreq.responseBody . key "items" . values . key "link" . _String
+
+luckyLinkOfQuery :: Gapi -> Text -> IO (Maybe Text)
+luckyLinkOfQuery gapi query = do
+  links <- linksOfQuery gapi query
+  case safeChoice links of
+   Just link ->
+     Just <$> runRVar link DevRandom
+   Nothing ->
+     return Nothing
