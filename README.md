@@ -1,7 +1,7 @@
 # jpg-to
 
 ```
-$ jpg-cli "haskell logo"
+$ jpg-to "haskell logo"
 https://wiki.haskell.org/wikiupload/6/6e/Haskell_logo_falconnl_8_fancy.png
 ```
 
@@ -11,7 +11,7 @@ Errors are not handled. I don't know how to write Haskell.
 ## Setup
 
 ```
-$ cp jpg-cli/conf.sample conf
+$ cp conf.sample conf
 $ cabal sandbox init
 $ cabal install -j
 $ cabal build
