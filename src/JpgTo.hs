@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
-
 module JpgTo
 ( config
 , linksOfQuery
