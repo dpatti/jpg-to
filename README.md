@@ -1,4 +1,4 @@
-# jpg-cli
+# jpg-to
 
 ```
 $ jpg-cli "haskell logo"
