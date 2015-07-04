@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
 
 module JpgTo
-(
-  config
-, findBest
+( config
+, linksOfQuery
+, luckyLinkOfQuery
 ) where
 
-import           BasePrelude
+import           BasePrelude hiding ((&))
 import           Control.Lens
 import           Data.Aeson.Lens
 import           Data.Text (Text)
@@ -31,18 +31,21 @@ imgApiQuery s = (Wreq.param "key" .~ [apiKey s])
 config :: Text -> Text -> Gapi
 config = Gapi
 
-findBest :: Gapi -> Text -> IO (Maybe Text)
-findBest gapi query = do
+linksOfQuery :: Gapi -> Text -> IO [Text]
+linksOfQuery gapi query = do
   let opts = Wreq.defaults
            & imgApiQuery gapi
            & (Wreq.param "q" .~ [query])
   r <- Wreq.getWith opts imgApiRoot
-  let items = toList . (r ^.) $ Wreq.responseBody . key "items" . _Array
+  return (r ^.. links)
+  where
+    links = Wreq.responseBody . key "items" . values . key "link" . _String
+
+luckyLinkOfQuery :: Gapi -> Text -> IO (Maybe Text)
+luckyLinkOfQuery gapi query = linksOfQuery gapi query >>= sample
+
+sample :: [a] -> IO (Maybe a)
+sample [] = return Nothing
+sample xs = do
   rand <- randomIO :: IO Int
-  let len = length items
-  if len > 0
-    then do
-      let pick = items !! (rand `mod` len)
-      return . return . (pick ^.) $ key "link" . _String
-    else
-      return Nothing
+  return . Just $ xs !! (rand `mod` length xs)
