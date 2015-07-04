@@ -2,7 +2,7 @@
 
 module Main where
 
-import           BasePrelude
+import           BasePrelude hiding ((&))
 import qualified Data.Configurator as Conf
 import           Data.Configurator.Types (Configured, Name)
 import           Data.Text (pack, unpack)
