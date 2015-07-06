@@ -1,7 +1,8 @@
 {-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
 
 module Network.Images.Search
-( config
+( Gapi(..)
+, config
 , linksOfQuery
 , luckyLinkOfQuery
 ) where
